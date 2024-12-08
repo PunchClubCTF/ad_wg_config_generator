@@ -1,0 +1,25 @@
+base_folder: wg_configs
+
+network:
+  main_server:
+    external_ip: ''
+    internal_ip: 10.10.10.10
+    subnet: 10.10.0.0/16
+    port: 52000
+
+  vulns:
+    subnet: 10.80.0.0/16
+    port: 51280
+
+  users:
+    subnet: 10.60.0.0/16
+
+team_settings:
+  total_members: 10
+  teams:
+    - name: PunchClub
+      external_ip: 95.132.123.12
+    - name: EverSploit
+      external_ip: 95.132.123.14
+    - name: PolyCTF
+      external_ip: 95.132.123.15
