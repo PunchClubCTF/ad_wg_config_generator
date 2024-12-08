@@ -1,0 +1,5 @@
+[Peer]
+PublicKey = {{public_key}}
+AllowedIPs = {{ip}}
+Endpoint = {{endpoint}}
+PersistentKeepalive = 30

@@ -1,0 +1,9 @@
+[Interface]
+Address = {{member_ip}}
+PrivateKey = {{member_private_key}}
+
+[Peer]
+PublicKey = {{server_public_key}}
+AllowedIPs = {{server_subnet}}, {{vulns_subnet}}, {{users_subnet}}
+Endpoint = {{server_endpoint}}
+PersistentKeepalive = 30

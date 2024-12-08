@@ -10,3 +10,14 @@ class Conf:
     def config(self) -> str:
         """Get the complete configuration"""
         return self._config
+
+    @config.setter
+    def config(self, value):
+        """
+        Setter for configuration with basic validation
+        """
+        if value is not None:
+            self._config = value
+        else:
+            raise ValueError("Configuration cannot be None")
+

@@ -1,0 +1,13 @@
+[Interface]
+Address = {{vuln_ip}}
+PrivateKey = {{vuln_private_key}}
+ListenPort = {{vuln_port}}
+
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o {interface} -j MASQUERADE
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o {interface} -j MASQUERADE
+
+[Peer]
+PublicKey = {{server_public_key}}
+AllowedIPs = {{server_subnet}}, {{vulns_subnet}}, {{users_subnet}}
+Endpoint = {{server_endpoint}}
+PersistentKeepalive = 30

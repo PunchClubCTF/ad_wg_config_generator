@@ -1,8 +1,9 @@
 base_folder: wg_configs
+vulns_folder: vulns
 
 network:
   main_server:
-    external_ip: ''
+    external_ip: 89.207.132.170
     internal_ip: 10.10.10.10
     subnet: 10.10.0.0/16
     port: 52000

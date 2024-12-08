@@ -3,7 +3,7 @@ from .Member import MemberFactory, Member
 from .WGKeyManagement import WGKeyManagement
 from .Conf import Conf
 
-class VulnConf(WGKeyManagement, Conf):
+class Vuln(WGKeyManagement, Conf):
     def __init__(self, external_ip, name, internal_ip, internal_subnet, users_subnet, team_members):
         WGKeyManagement.__init__(self)
         Conf.__init__(self)
@@ -19,13 +19,13 @@ class VulnConf(WGKeyManagement, Conf):
 
     def __str__(self):
         members_str = "\n    ".join(str(member) for member in self.members)
-        return (f"VulnConf(Name: {self.name}, External IP: {self.external_ip}, "
+        return (f"Vuln(Name: {self.name}, External IP: {self.external_ip}, "
                 f"Internal IP: {self.internal_ip}, Internal Subnet: {self.internal_subnet}, "
                 f"Users Subnet: {self.users_subnet}\n"
                 f"  Members:\n    {members_str})")
 
 
-class VulnConfFactory:
+class VulnFactory:
     def __init__(self, internal_subnet='10.80.0.0/16', users_subnet='10.60.0.0/16', team_members=5):
         # Initialize the network and start iterating over the /24 subnets
         self.network = ipaddress.IPv4Network(internal_subnet)
@@ -36,7 +36,7 @@ class VulnConfFactory:
         self.team_members = team_members  # Number of users (vulnerabilities) to create
 
     def create_vuln(self, external_ip, name):
-        """Creates a new VulnConf with an available internal subnet and provided external IP and name."""
+        """Creates a new Vuln with an available internal subnet and provided external IP and name."""
         # Get the next available /24 subnet
         current_subnet = next(self._current_subnet_iter)
 
@@ -53,11 +53,11 @@ class VulnConfFactory:
         self._current_internal_ip_octet += 1
         self._current_user_subnet_num += 1
 
-        return VulnConf(external_ip=external_ip, name=name, internal_ip=internal_ip, 
+        return Vuln(external_ip=external_ip, name=name, internal_ip=internal_ip, 
                        internal_subnet=internal_subnet, users_subnet=users_subnet, team_members=self.team_members)
 
 
-class VulnConfFactoryBuilder:
+class VulnFactoryBuilder:
     def __init__(self):
         self._internal_subnet = '10.80.0.0/16'  # Default subnet
         self._users_subnet = '10.60.0.0/16'  # Default users subnet
@@ -76,4 +76,4 @@ class VulnConfFactoryBuilder:
         return self
 
     def build(self):
-        return VulnConfFactory(internal_subnet=self._internal_subnet, users_subnet=self._users_subnet, team_members=self._num_users)
+        return VulnFactory(internal_subnet=self._internal_subnet, users_subnet=self._users_subnet, team_members=self._num_users)
