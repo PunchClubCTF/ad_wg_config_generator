@@ -26,7 +26,7 @@ class Vuln(WGKeyManagement, Conf):
 
 
 class VulnFactory:
-    def __init__(self, internal_subnet='10.80.0.0/16', users_subnet='10.60.0.0/16', team_members=5):
+    def __init__(self, internal_subnet, users_subnet, team_members=5):
         # Initialize the network and start iterating over the /24 subnets
         self.network = ipaddress.IPv4Network(internal_subnet)
         self.users_base_network = ipaddress.IPv4Network(users_subnet)
@@ -41,27 +41,26 @@ class VulnFactory:
         current_subnet = next(self._current_subnet_iter)
 
         # Calculate the internal IP, which is always .2 in the x.y.z.2 format for each /24 subnet
-        internal_ip = f"10.{current_subnet.network_address.packed[1]}.{self._current_internal_ip_octet + 1}.2"
+        internal_ip = f"{current_subnet.network_address.packed[0]}.{current_subnet.network_address.packed[1]}.{self._current_internal_ip_octet + 1}.2"
 
         # The internal subnet is always .0/24 for the respective subnet
-        internal_subnet = f"10.{current_subnet.network_address.packed[1]}.{self._current_internal_ip_octet + 1}.0/24"
+        internal_subnet = f"{current_subnet.network_address.packed[0]}.{current_subnet.network_address.packed[1]}.{self._current_internal_ip_octet + 1}.0/24"
 
-        # Calculate the users subnet (10.60.X.0/24 where X increments for each team)
-        users_subnet = f"10.60.{self._current_user_subnet_num}.0/24"
+        # Get the next available users subnet from users_base_network
+        users_subnet = next(self.users_base_network.subnets(new_prefix=24))
 
         # Increment the subnet indices for the next subnet
         self._current_internal_ip_octet += 1
         self._current_user_subnet_num += 1
 
-        return Vuln(external_ip=external_ip, name=name, internal_ip=internal_ip, 
-                       internal_subnet=internal_subnet, users_subnet=users_subnet, team_members=self.team_members)
-
+        return Vuln(external_ip=external_ip, name=name, internal_ip=internal_ip,
+                    internal_subnet=internal_subnet, users_subnet=str(users_subnet), team_members=self.team_members)
 
 class VulnFactoryBuilder:
     def __init__(self):
-        self._internal_subnet = '10.80.0.0/16'  # Default subnet
-        self._users_subnet = '10.60.0.0/16'  # Default users subnet
-        self._num_users = 1  # Default number of users to create
+        self._internal_subnet = ''
+        self._users_subnet = ''
+        self._num_users = 5  # Default number of users to create
 
     def set_internal_subnet(self, internal_subnet):
         self._internal_subnet = internal_subnet

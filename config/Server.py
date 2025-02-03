@@ -21,8 +21,8 @@ class ServerBuilder:
     def __init__(self):
         self._name = "server"
         self._external_ip = ""
-        self._internal_ip = "10.10.0.1"
-        self._internal_subnet = "10.10.0.0/16"
+        self._internal_ip = ""
+        self._internal_subnet = ""
         self._port = 52000
 
     def set_name(self, name: str):
